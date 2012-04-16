@@ -1,12 +1,3 @@
-# Gister: https://gist.github.com/2395634 created 16.04.2012 at 08:49:07
-# Gister: https://gist.github.com/2393044 created 15.04.2012 at 22:09:33
-# Gister: https://gist.github.com/2393031 created 15.04.2012 at 22:07:43
-# Gister: https://gist.github.com/2393024 created 15.04.2012 at 22:06:38
-# Gister: https://gist.github.com/2393015 created 15.04.2012 at 22:05:16
-# Gister: https://gist.github.com/2392997 created 15.04.2012 at 22:03:18
-# Gister: https://gist.github.com/2392982 created 15.04.2012 at 22:01:52
-# Gister: https://gist.github.com/2392979 created 15.04.2012 at 22:01:14
-# Gister: https://gist.github.com/2385185 created 14.04.2012 at 23:20:39
 import sublime, sublime_plugin
 import urllib, urllib2
 import json
@@ -15,18 +6,12 @@ import os
 
 class CreateGistCommand(sublime_plugin.TextCommand):
     GIST_API_URL_ROOT = 'https://api.github.com/gists'
+    NAME = "SubGist"
 
     def run(self, edit):
         gist_content = self.find_content(edit)
-        result = self.create_gist(gist_content, "Created by Gister")
+        result = self.create_gist(gist_content, "Created by %s" % self.NAME)
         self.show_result(edit, result['html_url'])
-
-    def show_result(self, edit, gist_url):
-        timestamp_date = datetime.now().strftime("%d.%m.%Y")
-        timestamp_time = datetime.now().strftime("%H:%M:%S")
-        self.view.insert(edit, 0, "Gister: %(url)s created %(date)s at %(time)s\n" % { "date": timestamp_date, "time": timestamp_time, "url": gist_url })
-        self.view.run_command("goto_line", {"line": 1})
-        self.view.run_command("toggle_comment")
 
     def create_gist(self, gist_content, description):
         try:  
@@ -69,4 +54,10 @@ class CreateGistCommand(sublime_plugin.TextCommand):
     def full_text(self):
         full_text = sublime.Region(0, self.view.size())
         return self.view.substr(full_text)
+
+    def show_result(self, edit, gist_url):
+        timestamp = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+        self.view.insert(edit, 0, "[%(name)s] %(url)s created %(timestamp)s\n" % { "name": self.NAME, "timestamp": timestamp, "url": gist_url })
+        self.view.run_command("goto_line", {"line": 1})
+        self.view.run_command("toggle_comment")
 
