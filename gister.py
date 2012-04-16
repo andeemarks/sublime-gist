@@ -1,3 +1,4 @@
+# Gister: https://gist.github.com/2395634 created 16.04.2012 at 08:49:07
 # Gister: https://gist.github.com/2393044 created 15.04.2012 at 22:09:33
 # Gister: https://gist.github.com/2393031 created 15.04.2012 at 22:07:43
 # Gister: https://gist.github.com/2393024 created 15.04.2012 at 22:06:38
@@ -21,7 +22,9 @@ class CreateGistCommand(sublime_plugin.TextCommand):
         self.show_result(edit, result['html_url'])
 
     def show_result(self, edit, gist_url):
-        self.view.insert(edit, 0, "Gister: %(url)s created %(date)s at %(time)s\n" % { "date": datetime.now().strftime("%d.%m.%Y"), "time": datetime.now().strftime("%H:%M:%S"), "url": gist_url })
+        timestamp_date = datetime.now().strftime("%d.%m.%Y")
+        timestamp_time = datetime.now().strftime("%H:%M:%S")
+        self.view.insert(edit, 0, "Gister: %(url)s created %(date)s at %(time)s\n" % { "date": timestamp_date, "time": timestamp_time, "url": gist_url })
         self.view.run_command("goto_line", {"line": 1})
         self.view.run_command("toggle_comment")
 
