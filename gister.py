@@ -13,6 +13,7 @@ from datetime import datetime
 import os
 
 class CreateGistCommand(sublime_plugin.TextCommand):
+    GIST_API_URL_ROOT = 'https://api.github.com/gists'
 
     def run(self, edit):
         gist_content = self.find_content(edit)
@@ -26,14 +27,10 @@ class CreateGistCommand(sublime_plugin.TextCommand):
 
     def create_gist(self, gist_content, description):
         try:  
-            file_name = os.path.basename(self.view.file_name())
-            data = { 'public':'true', 'description':description, 'files':{file_name:{'content':gist_content}}}
-            request_body = json.dumps(data) 
-            request = urllib2.Request('https://api.github.com/gists', request_body)
-            http_file = urllib2.urlopen(request, timeout=100)  
-            self.result = http_file.read()  
+            request_body = self.build_request(description, gist_content)
+            result = self.execute_request(request_body)
             
-            return json.loads(self.result)
+            return result
 
         except (urllib2.HTTPError) as (e):  
             err = '%s: HTTP error %s contacting API' % (__name__, str(e.code))  
@@ -41,6 +38,18 @@ class CreateGistCommand(sublime_plugin.TextCommand):
             err = '%s: URL error %s contacting API' % (__name__, str(e.reason))  
 
         sublime.error_message(err)
+
+    def execute_request(self, request_body):
+        request = urllib2.Request(self.GIST_API_URL_ROOT, request_body)
+        http_file = urllib2.urlopen(request, timeout=100)  
+        result = http_file.read()  
+        
+        return json.loads(result)
+
+    def build_request(self, description, gist_content):
+        file_name = os.path.basename(self.view.file_name())
+        data = { 'public':'true', 'description':description, 'files':{file_name:{'content':gist_content}}}
+        return json.dumps(data) 
 
     def find_content(self, edit):
         selections = self.view.sel()  
