@@ -4,6 +4,8 @@ Sublime-text was created to allow seamless creating of Gists from the content of
 
 Currently only unauthorised Gist creation is supported.  I might get around to the OAuth side of things later so you can create personal Gists.
 
+Note: there seems to be a more fully featured Sublime Text -> Gist plugin [here](https://github.com/condemil/Gist).
+
 To date, this plugin has been tested with the following configurations:
 
 * Sublime Text 2 Beta Build: 2181, Mac OS X Version 10.7.3, Python 2.7.1
