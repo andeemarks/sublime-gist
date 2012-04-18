@@ -29,7 +29,7 @@ Then clone this repository:
 
 ##Usage
 
-[TODO]
+[TODO - Probably need to have a key binding or menu option]
 
 Sublime Gist works in two basic modes:
 
